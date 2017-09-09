@@ -8,7 +8,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/imroc/req"
 	"github.com/zaaksam/goman/go/model"
 )
 
@@ -16,13 +15,6 @@ import (
 var Req reqService
 
 type reqService struct{}
-
-func (s *reqService) DoRequest() (resp *req.Resp, err error) {
-	r := req.New()
-
-	resp, err = r.Do("", "")
-	return
-}
 
 func (s *reqService) Do(req *model.RequestModel) (res *model.ResponseModel, err error) {
 	httpClient := http.Client{}
@@ -32,27 +24,6 @@ func (s *reqService) Do(req *model.RequestModel) (res *model.ResponseModel, err 
 	if strings.Index(url, "://") == -1 {
 		url = "http://" + url
 	}
-
-	// if len(req.Bodys) > 0 {
-	// 	req.Body = ""
-
-	// 	c := 0
-	// 	for k, v := range req.Bodys {
-	// 		if c > 0 {
-	// 			req.Body += "&"
-	// 		}
-
-	// 		for i, l := 0, len(v); i < l; i++ {
-	// 			if i > 0 {
-	// 				req.Body += "&"
-	// 			}
-
-	// 			req.Body += k + "=" + netURL.QueryEscape(v[i])
-	// 		}
-
-	// 		c++
-	// 	}
-	// }
 
 	method := strings.ToUpper(req.Method)
 	if req.Body != "" {
