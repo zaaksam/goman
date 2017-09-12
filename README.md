@@ -32,3 +32,16 @@ a web app like postman
 Backend Go + beego
 
 Frontend Typescript + Vue + iView
+
+# 更新日志
+
+2017-09-12 v0.1.3
+
+* 拆分webpack为dev、prod环境
+* 升级相关依赖项
+
+---
+
+2017-09-10 v0.1.2
+
+* 项目初始化
