@@ -2,3 +2,4 @@ node_modules/
 .vscode/
 go/go
 go/debug
+*.map
