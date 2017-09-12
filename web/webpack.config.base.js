@@ -1,5 +1,26 @@
+const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
+
+function deleteJS(dir) {
+    var files = [];
+    if (fs.existsSync(dir)) {
+        files = fs.readdirSync(dir);
+        files.forEach(function (file, index) {
+            var curDir = dir + "/" + file;
+            if (fs.statSync(curDir).isDirectory()) { // recurse  
+                deleteJS(curDir);
+            } else { // delete file  
+                fs.unlinkSync(curDir);
+            }
+        });
+        fs.rmdirSync(dir);
+    }
+};
+
+//总是清除之前生成的文件
+var jsDir = path.resolve(__dirname, './static/js');
+deleteJS(jsDir);
 
 module.exports = {
     entry: {
@@ -48,29 +69,5 @@ module.exports = {
                 }
             }
         ]
-    },
-    plugins: [
-        new webpack.DefinePlugin({
-            'process.env': {
-                NODE_ENV: '"production"'
-                // NODE_ENV: '"development"'
-            }
-        }),
-        new webpack.optimize.CommonsChunkPlugin({
-            name: 'vendor',
-            minChunks: Infinity
-            // filename: 'vendor.min1.js',
-            // children: true
-            // minChunks: 2
-        }),
-        new webpack.optimize.UglifyJsPlugin({
-            sourceMap: false,
-            compress: {
-                warnings: false
-            },
-            // 混淆
-            mangle: true
-        })
-    ],
-    devtool: 'source-map'
+    }
 }
