@@ -1397,9 +1397,9 @@ isstream@~0.1.2:
   version "0.1.2"
   resolved "http://registry.npm.taobao.org/isstream/download/isstream-0.1.2.tgz#47e63f7af55afa6f92e1500e690eb8b8529c099a"
 
-iview@^2.3.0:
-  version "2.3.0"
-  resolved "http://registry.npm.taobao.org/iview/download/iview-2.3.0.tgz#8a84177896df679a0166f61afee5f80d95556675"
+iview@^2.3.2:
+  version "2.3.2"
+  resolved "http://registry.npm.taobao.org/iview/download/iview-2.3.2.tgz#9f2b5f1e97fa021dd23c1e35d6c52874b68842c0"
   dependencies:
     async-validator "^1.7.1"
     core-js "^2.5.0"
@@ -2894,6 +2894,12 @@ watchpack@^1.4.0:
     async "^2.1.2"
     chokidar "^1.7.0"
     graceful-fs "^4.1.2"
+
+webpack-merge@^4.1.0:
+  version "4.1.0"
+  resolved "http://registry.npm.taobao.org/webpack-merge/download/webpack-merge-4.1.0.tgz#6ad72223b3e0b837e531e4597c199f909361511e"
+  dependencies:
+    lodash "^4.17.4"
 
 webpack-sources@^1.0.1:
   version "1.0.1"
