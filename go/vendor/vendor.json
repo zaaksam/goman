@@ -57,22 +57,22 @@
 			"revisionTime": "2017-07-18T16:56:48Z"
 		},
 		{
-			"checksumSHA1": "HHB+Jna1wv0cXLxtCyOnQqFwvn4=",
+			"checksumSHA1": "9SXbj96wb1PgppBZzxMIN0axbFQ=",
 			"path": "github.com/go-xorm/builder",
-			"revision": "c6e604e9c7b7461715091e14ad0c242ec44c26e4",
-			"revisionTime": "2017-02-24T04:30:50Z"
+			"revision": "c8871c857d2555fbfbd8524f895be5386d3d8836",
+			"revisionTime": "2017-05-19T03:21:30Z"
 		},
 		{
-			"checksumSHA1": "vt2CGANHLNXPAZ01ve3UlsgQ0uU=",
+			"checksumSHA1": "HMavuxvDhKOwmbbFnYt9hfT6jE0=",
 			"path": "github.com/go-xorm/core",
-			"revision": "e8409d73255791843585964791443dbad877058c",
-			"revisionTime": "2017-03-17T12:25:07Z"
+			"revision": "da1adaf7a28ca792961721a34e6e04945200c890",
+			"revisionTime": "2017-09-09T08:56:53Z"
 		},
 		{
-			"checksumSHA1": "N3Fs7DQjVe9jktIwbOYZ5fobyEU=",
+			"checksumSHA1": "SoZDnkd5NdwE0g4MY1nTAl8ZtPo=",
 			"path": "github.com/go-xorm/xorm",
-			"revision": "30dcce510d75def4fa156af1a8cf845c2d32af19",
-			"revisionTime": "2017-04-10T15:10:59Z"
+			"revision": "c29485f954ed6495861c0098f9a1642a467299c8",
+			"revisionTime": "2017-09-10T12:58:18Z"
 		},
 		{
 			"checksumSHA1": "qNbIMcsoKG3jP+boPRo1CQn9tqA=",
@@ -85,6 +85,12 @@
 			"path": "github.com/rakyll/statik/fs",
 			"revision": "89fe3459b5c829c32e89bdff9c43f18aad728f2f",
 			"revisionTime": "2017-04-10T19:29:44Z"
+		},
+		{
+			"checksumSHA1": "t5HWOBgWGImDfIPkDEppJbZi5iw=",
+			"path": "github.com/zserge/webview",
+			"revision": "a017044442c5679d7abba6cab1dfe2a6d6a458b2",
+			"revisionTime": "2017-09-20T07:20:10Z"
 		},
 		{
 			"checksumSHA1": "dr5+PfIRzXeN+l1VG+s0lea9qz8=",
