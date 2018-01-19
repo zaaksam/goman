@@ -73,6 +73,7 @@ type Statement struct {
 	decrColumns     map[string]decrParam
 	exprColumns     map[string]exprParam
 	cond            builder.Cond
+	bufferSize      int
 }
 
 // Init reset all the statement's fields
@@ -111,6 +112,7 @@ func (statement *Statement) Init() {
 	statement.decrColumns = make(map[string]decrParam)
 	statement.exprColumns = make(map[string]exprParam)
 	statement.cond = builder.NewCond()
+	statement.bufferSize = 0
 }
 
 // NoAutoCondition if you do not want convert bean's field as query condition, then use this function
@@ -158,6 +160,9 @@ func (statement *Statement) And(query interface{}, args ...interface{}) *Stateme
 	case string:
 		cond := builder.Expr(query.(string), args...)
 		statement.cond = statement.cond.And(cond)
+	case map[string]interface{}:
+		cond := builder.Eq(query.(map[string]interface{}))
+		statement.cond = statement.cond.And(cond)
 	case builder.Cond:
 		cond := query.(builder.Cond)
 		statement.cond = statement.cond.And(cond)
@@ -178,6 +183,9 @@ func (statement *Statement) Or(query interface{}, args ...interface{}) *Statemen
 	switch query.(type) {
 	case string:
 		cond := builder.Expr(query.(string), args...)
+		statement.cond = statement.cond.Or(cond)
+	case map[string]interface{}:
+		cond := builder.Eq(query.(map[string]interface{}))
 		statement.cond = statement.cond.Or(cond)
 	case builder.Cond:
 		cond := query.(builder.Cond)
@@ -899,8 +907,12 @@ func (statement *Statement) genDelIndexSQL() []string {
 
 func (statement *Statement) genAddColumnStr(col *core.Column) (string, []interface{}) {
 	quote := statement.Engine.Quote
-	sql := fmt.Sprintf("ALTER TABLE %v ADD %v;", quote(statement.TableName()),
+	sql := fmt.Sprintf("ALTER TABLE %v ADD %v", quote(statement.TableName()),
 		col.String(statement.Engine.dialect))
+	if statement.Engine.dialect.DBType() == core.MYSQL && len(col.Comment) > 0 {
+		sql += " COMMENT '" + col.Comment + "'"
+	}
+	sql += ";"
 	return sql, []interface{}{}
 }
 

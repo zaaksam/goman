@@ -57,22 +57,22 @@
 			"revisionTime": "2017-07-18T16:56:48Z"
 		},
 		{
-			"checksumSHA1": "9SXbj96wb1PgppBZzxMIN0axbFQ=",
+			"checksumSHA1": "YkpuNhq75eI7X98jjtYh5gfsnts=",
 			"path": "github.com/go-xorm/builder",
-			"revision": "c8871c857d2555fbfbd8524f895be5386d3d8836",
-			"revisionTime": "2017-05-19T03:21:30Z"
+			"revision": "a4a881a4e552fcb5473f39e8b9f7d9f3457a7fb0",
+			"revisionTime": "2017-10-30T02:14:29Z"
 		},
 		{
-			"checksumSHA1": "HMavuxvDhKOwmbbFnYt9hfT6jE0=",
+			"checksumSHA1": "zEViql2RV5UZi4mYpV+30Lh8CK8=",
 			"path": "github.com/go-xorm/core",
-			"revision": "da1adaf7a28ca792961721a34e6e04945200c890",
-			"revisionTime": "2017-09-09T08:56:53Z"
+			"revision": "589eefd4f452f2bdb7cb2df841a548d5f6e2d48a",
+			"revisionTime": "2017-12-06T13:58:25Z"
 		},
 		{
-			"checksumSHA1": "SoZDnkd5NdwE0g4MY1nTAl8ZtPo=",
+			"checksumSHA1": "0RiAbhNbzC5uuZzQ/D14J8+WIqQ=",
 			"path": "github.com/go-xorm/xorm",
-			"revision": "c29485f954ed6495861c0098f9a1642a467299c8",
-			"revisionTime": "2017-09-10T12:58:18Z"
+			"revision": "26d40bc248ca034cdec1f61bce92ebeab240186f",
+			"revisionTime": "2017-12-11T05:49:42Z"
 		},
 		{
 			"checksumSHA1": "qNbIMcsoKG3jP+boPRo1CQn9tqA=",
@@ -83,20 +83,20 @@
 		{
 			"checksumSHA1": "++Uxr4F++QrnFEbBlQsJ3VuQoNM=",
 			"path": "github.com/rakyll/statik/fs",
-			"revision": "89fe3459b5c829c32e89bdff9c43f18aad728f2f",
-			"revisionTime": "2017-04-10T19:29:44Z"
+			"revision": "016ca6fdb1b26618ff8f53fbd1109ff834524f23",
+			"revisionTime": "2017-09-21T04:38:01Z"
 		},
 		{
-			"checksumSHA1": "t5HWOBgWGImDfIPkDEppJbZi5iw=",
+			"checksumSHA1": "74sbkQfq4PgcfClChxNZgKLd3zk=",
 			"path": "github.com/zserge/webview",
-			"revision": "a017044442c5679d7abba6cab1dfe2a6d6a458b2",
-			"revisionTime": "2017-09-20T07:20:10Z"
+			"revision": "379a92f9055d6371daac45a136b673adaba133e4",
+			"revisionTime": "2017-12-08T16:38:17Z"
 		},
 		{
-			"checksumSHA1": "dr5+PfIRzXeN+l1VG+s0lea9qz8=",
+			"checksumSHA1": "GtamqiJoL7PGHsN454AoffBFMa8=",
 			"path": "golang.org/x/net/context",
-			"revision": "f5079bd7f6f74e23c4d65efa0f4ce14cbd6a3c0f",
-			"revisionTime": "2017-07-19T21:11:51Z"
+			"revision": "5ccada7d0a7ba9aeb5d3aca8d3501b4c2a509fec",
+			"revisionTime": "2018-01-12T01:53:59Z"
 		}
 	],
 	"rootPath": "github.com/zaaksam/goman/go"

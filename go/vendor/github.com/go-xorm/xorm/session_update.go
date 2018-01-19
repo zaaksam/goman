@@ -202,17 +202,19 @@ func (session *Session) Update(bean interface{}, condiBean ...interface{}) (int6
 	table := session.statement.RefTable
 
 	if session.statement.UseAutoTime && table != nil && table.Updated != "" {
-		colNames = append(colNames, session.engine.Quote(table.Updated)+" = ?")
-		col := table.UpdatedColumn()
-		val, t := session.engine.NowTime2(col.SQLType.Name)
-		args = append(args, val)
+		if _, ok := session.statement.columnMap[strings.ToLower(table.Updated)]; !ok {
+			colNames = append(colNames, session.engine.Quote(table.Updated)+" = ?")
+			col := table.UpdatedColumn()
+			val, t := session.engine.nowTime(col)
+			args = append(args, val)
 
-		var colName = col.Name
-		if isStruct {
-			session.afterClosures = append(session.afterClosures, func(bean interface{}) {
-				col := table.GetColumn(colName)
-				setColumnTime(bean, col, t)
-			})
+			var colName = col.Name
+			if isStruct {
+				session.afterClosures = append(session.afterClosures, func(bean interface{}) {
+					col := table.GetColumn(colName)
+					setColumnTime(bean, col, t)
+				})
+			}
 		}
 	}
 
@@ -240,10 +242,23 @@ func (session *Session) Update(bean interface{}, condiBean ...interface{}) (int6
 
 	var autoCond builder.Cond
 	if !session.statement.noAutoCondition && len(condiBean) > 0 {
-		var err error
-		autoCond, err = session.statement.buildConds(session.statement.RefTable, condiBean[0], true, true, false, true, false)
-		if err != nil {
-			return 0, err
+		if c, ok := condiBean[0].(map[string]interface{}); ok {
+			autoCond = builder.Eq(c)
+		} else {
+			ct := reflect.TypeOf(condiBean[0])
+			k := ct.Kind()
+			if k == reflect.Ptr {
+				k = ct.Elem().Kind()
+			}
+			if k == reflect.Struct {
+				var err error
+				autoCond, err = session.statement.buildConds(session.statement.RefTable, condiBean[0], true, true, false, true, false)
+				if err != nil {
+					return 0, err
+				}
+			} else {
+				return 0, ErrConditionType
+			}
 		}
 	}
 
