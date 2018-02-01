@@ -1,5 +1,5 @@
 <template>
-    <div class="layout-ceiling">
+    <div>
         <div class="layout-logo">
             {{ title }}
         </div>
@@ -8,18 +8,13 @@
             <ButtonGroup>
                 <Button icon="social-github" @click="onGithub"></Button>
                 <Button @click="onLanguage">{{language}}</Button>
+                <Button icon="refresh" @click="onRefresh"></Button>
             </ButtonGroup>
         </div>
     </div>
 </template>
 
 <style>
-.layout-ceiling {
-  background: #464c5b;
-  padding: 10px 0;
-  overflow: hidden;
-}
-
 .layout-ceiling-main {
   float: right;
   margin-right: 15px;
@@ -38,6 +33,7 @@
   border-radius: 3px;
   float: left;
   position: relative;
+  top: 15px;
   left: 20px;
   text-align: center;
 }
@@ -78,6 +74,10 @@ export default class Top extends Vue {
 
     let locale = this.isCN ? "zh-CN" : "en-US";
     this.$i18n.locale = locale;
+  }
+
+  onRefresh() {
+    window.location.reload();
   }
 }
 </script>

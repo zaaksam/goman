@@ -1,11 +1,17 @@
 <template>
     <div class="layout">
-        <MyTop></MyTop>
-        <div class="layout-content">
-            <div class="layout-content-main">
-                <router-view></router-view>
-            </div>
-        </div>
+        <Layout>
+            <Header :style="{position:'fixed',width:'100%','z-index':99}">
+                <MyTop></MyTop>
+            </Header>
+            <Content :style="{margin:'50px 0px 0','z-index':0}">
+                <div class="layout-content">
+                    <div class="layout-content-main">
+                        <router-view></router-view>
+                    </div>
+                </div>
+            </Content>
+        </Layout>
     </div>
 </template>
 

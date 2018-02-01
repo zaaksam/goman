@@ -4,21 +4,21 @@
             <div slot="title">{{$t('goman.req.report.title')}}</div>
             <div>
                 <Row style="height:240px;">
-                    <Col span="5">
+                    <Col span="8">
                         <div>{{$t('goman.req.report.summary.total')}}：{{total}}&nbsp;s</div>
                         <div>{{$t('goman.req.report.summary.slowest')}}：{{slowestFinish}}&nbsp;ms</div>
                         <div>{{$t('goman.req.report.summary.fastest')}}：{{fastestFinish}}&nbsp;ms</div>
                         <div>{{$t('goman.req.report.summary.average')}}：{{avgFinish}}&nbsp;ms</div>
                         <div>{{$t('goman.req.report.summary.rps')}}：{{rps}}</div>
                     </Col>
-                    <Col span="8">
+                    <Col span="16">
                         <div>
                             <Table stripe border size="small" :columns="durationColumns" :data="durations" :no-data-text="$t('goman.general.noData')" :no-filtered-data-text="$t('goman.general.noFilterData')"></Table>
                         </div>
                     </Col>
-                    <Col span="11">
+                    <!-- <Col span="10">
                         <div :id="chartID" style="height:240px;"></div>
-                    </Col>
+                    </Col> -->
                 </Row>
             </div>
         </Card>
@@ -40,6 +40,10 @@ export default class report extends Vue {
     {
       title: "",
       key: "type"
+    },
+    {
+      title: "",
+      key: "average"
     },
     {
       title: "",
@@ -88,18 +92,20 @@ export default class report extends Vue {
       "goman.req.report.table.type"
     ).toString();
     this.durationColumns[1].title =
-      this.$t("goman.req.report.table.slowest").toString() + "(ms)";
+      this.$t("goman.req.report.table.average").toString() + "(ms)";
     this.durationColumns[2].title =
+      this.$t("goman.req.report.table.slowest").toString() + "(ms)";
+    this.durationColumns[3].title =
       this.$t("goman.req.report.table.fastest").toString() + "(ms)";
 
     this.onDurationShow();
-    this.onCharts();
+    // this.onCharts();
   }
 
   mounted() {
-    this.ec = echarts.init(<HTMLDivElement>document.getElementById(
-      this.chartID
-    ));
+    // this.ec = echarts.init(<HTMLDivElement>document.getElementById(
+    //   this.chartID
+    // ));
   }
 
   get chartID() {
@@ -111,7 +117,7 @@ export default class report extends Vue {
     this.onCount();
 
     this.onDurationShow();
-    this.onCharts();
+    // this.onCharts();
   }
 
   onDurationShow() {
@@ -119,27 +125,32 @@ export default class report extends Vue {
       {
         type: this.$t("goman.req.report.table.dns"),
         fastest: this.fastestDNS,
-        slowest: this.slowestDNS
+        slowest: this.slowestDNS,
+        average: this.avgDNS
       },
       {
         type: this.$t("goman.req.report.table.conn"),
         fastest: this.fastestConn,
-        slowest: this.slowestConn
+        slowest: this.slowestConn,
+        average: this.avgConn
       },
       {
         type: this.$t("goman.req.report.table.req"),
         fastest: this.fastestReq,
-        slowest: this.slowestReq
+        slowest: this.slowestReq,
+        average: this.avgReq
       },
       {
         type: this.$t("goman.req.report.table.delay"),
         fastest: this.fastestDelay,
-        slowest: this.slowestDelay
+        slowest: this.slowestDelay,
+        average: this.avgDelay
       },
       {
         type: this.$t("goman.req.report.table.res"),
         fastest: this.fastestRes,
-        slowest: this.slowestRes
+        slowest: this.slowestRes,
+        average: this.avgRes
       }
     ];
   }
