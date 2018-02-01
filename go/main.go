@@ -12,10 +12,12 @@ import (
 	"github.com/zaaksam/goman/go/config"
 	// _ "github.com/zaaksam/goman/go/db"
 	_ "github.com/zaaksam/goman/go/routers"
-	// "github.com/zserge/webview"
+	"github.com/zserge/webview"
 )
 
 func main() {
+	runtime.GOMAXPROCS(-1)
+
 	beego.BConfig.AppName = config.AppConf.Name
 	beego.BConfig.ServerName = config.AppConf.Name
 	beego.BConfig.WebConfig.AutoRender = false
@@ -43,14 +45,28 @@ func main() {
 
 		beego.Run()
 	} else if config.AppConf.IsAppMode {
-		// logs.Info("====== 欢迎使用 " + config.AppConf.Name + " " + config.AppConf.Version + "（App模式） ，关闭此窗口即可退出程序 ======")
+		//logs.Info("====== 欢迎使用 " + config.AppConf.Name + " " + config.AppConf.Version + "（App模式） ，关闭此窗口即可退出程序 ======")
 
-		// go beego.Run()
+		go beego.Run()
 
-		// err := webview.Open(config.AppConf.Name, fmt.Sprintf("http://%s:%d/web", config.AppConf.IP, config.AppConf.Port), 800, 600, true)
-		// if err != nil {
-		// 	logs.Critical("webview启动失败：", err)
-		// }
+		// w := webview.New(webview.Settings{
+		// 	Title:     config.AppConf.Name,
+		// 	URL:       fmt.Sprintf("http://%s:%d/web", config.AppConf.IP, config.AppConf.Port),
+		// 	Width:     800,
+		// 	Height:    600,
+		// 	Resizable: true,
+		// 	ExternalInvokeCallback: func(w webview.WebView, data string) {
+		// 		logs.Info("收到JS信息：", data)
+		// 	},
+		// })
+		// defer w.Exit()
+
+		// w.Run()
+
+		err := webview.Open(config.AppConf.Name, fmt.Sprintf("http://%s:%d/web", config.AppConf.IP, config.AppConf.Port), 1024, 768, true)
+		if err != nil {
+			logs.Critical("webview启动失败：", err)
+		}
 	}
 }
 

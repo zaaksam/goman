@@ -1,11 +1,11 @@
 import Vue from 'vue'
-import VueRouter from 'vue-router'
+import VueRouter, { RouteConfig } from 'vue-router'
 
 import Req from '../vue/req/index.vue'
 
 Vue.use(VueRouter)
 
-const routes = <VueRouter.RouteConfig[]>[
+const routes = <RouteConfig[]>[
     { path: '/web', name: 'req', component: Req }
 ]
 
