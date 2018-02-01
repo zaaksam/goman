@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
 
-function deleteJS(dir) {
+function deleteDir(dir) {
     var files = [];
     if (fs.existsSync(dir)) {
         files = fs.readdirSync(dir);
@@ -18,28 +18,33 @@ function deleteJS(dir) {
     }
 };
 
-//总是清除之前生成的文件
-var jsDir = path.resolve(__dirname, './static/js');
-deleteJS(jsDir);
+var isDev = false;
+if (process.env && process.env.NODE_ENV === 'dev') {
+    isDev = true;
+}
 
-module.exports = {
+//总是清除之前生成的文件
+var distDir = path.join(__dirname, 'static', 'js');
+deleteDir(distDir);
+
+var config = {
     entry: {
-        vendor: ['vue', 'vue-router', 'lodash', 'axios', 'moment', 'iview-style', 'iview', 'highlight.js-style', 'highlight.js'],
+        vendor: ['vue', 'vue-router', 'vue-i18n', 'echarts', 'lodash', 'axios', 'moment', 'iview-en', 'iview-zh', 'iview-style', 'iview', 'highlight.js-style', 'highlight.js'],
         app: ['./ts/main.ts']
     },
     output: {
         filename: '[name].min.js',
-        path: path.resolve(__dirname, 'static', 'js'),
-        publicPath: '/static/js/'
+        path: distDir
     },
     resolve: {
         extensions: ['.ts', '.js', '.vue'],
         alias: {
+            'iview-en': 'iview/dist/locale/en-US',
+            'iview-zh': 'iview/dist/locale/zh-CN',
             'iview-style': 'iview/dist/styles/iview.css',
             'highlight.js-style': 'highlight.js/styles/default.css'
         }
     },
-    watch: true,
     module: {
         rules: [
             {
@@ -56,7 +61,6 @@ module.exports = {
             {
                 test: /\.ts$/,
                 loader: 'ts-loader',
-                exclude: /node_modules/,
                 options: {
                     appendTsSuffixTo: [/\.vue$/]
                 }
@@ -69,5 +73,40 @@ module.exports = {
                 }
             }
         ]
-    }
+    },
+    plugins: [
+        new webpack.optimize.CommonsChunkPlugin({
+            name: 'vendor',
+            minChunks: Infinity
+        })
+    ]
 }
+
+if (isDev) {
+    config.watch = true;
+    config.plugins.unshift(
+        new webpack.DefinePlugin({
+            'process.env': {
+                NODE_ENV: '"development"'
+            }
+        })
+    );
+} else {
+    config.plugins.unshift(
+        new webpack.DefinePlugin({
+            'process.env': {
+                NODE_ENV: '"production"'
+            }
+        })
+    );
+    config.plugins.unshift(
+        new webpack.optimize.UglifyJsPlugin({
+            minimize: true
+        })
+    );
+
+    //生产模式，删除 go/statik 目录重新生成
+    deleteDir(path.join(__dirname, '..', 'go', 'statik'));
+}
+
+module.exports = config;

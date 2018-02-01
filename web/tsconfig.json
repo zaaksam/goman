@@ -8,24 +8,16 @@
         ],
         "module": "es2015",
         "moduleResolution": "node",
-        "isolatedModules": false,
         "experimentalDecorators": true,
-        "noImplicitAny": true,
-        "noImplicitThis": true,
-        "strictNullChecks": true,
         "removeComments": true,
         "suppressImplicitAnyIndexErrors": true,
         "allowSyntheticDefaultImports": true,
         "allowJs": true,
-        "sourceMap": true
+        "strict": true
     },
     "include": [
         "./types/*",
         "./ts/**/*",
         "./vue/**/*"
-    ],
-    "exclude": [
-        "node_modules"
-    ],
-    "compileOnSave": false
+    ]
 }
