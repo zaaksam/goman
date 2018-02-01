@@ -39,6 +39,7 @@ const message: i18nModel = {
                 },
                 table: {
                     type: '明细',
+                    average: '平均',
                     slowest: '最慢',
                     fastest: '最快',
                     dns: 'DNS解析',

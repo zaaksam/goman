@@ -39,6 +39,7 @@ const message: i18nModel = {
                 },
                 table: {
                     type: 'Detail',
+                    average: 'Average',
                     slowest: 'Slowest',
                     fastest: 'Fastest',
                     dns: 'DNS',

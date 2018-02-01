@@ -41,6 +41,7 @@ declare interface i18nModel {
                 }
                 table: {
                     type: string
+                    average: string
                     slowest: string
                     fastest: string
                     dns: string
