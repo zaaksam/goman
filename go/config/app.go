@@ -17,7 +17,7 @@ func init() {
 	flag.BoolVar(&AppConf.Debug, "debug", false, "调试模式，默认：false")
 	flag.StringVar(&AppConf.IP, "ip", "", "监听的IP地址，默认：127.0.0.1")
 	flag.IntVar(&AppConf.Port, "port", 0, "服务端口，默认：随机")
-	flag.StringVar(&mode, "mode", "web", "运行模式：web：Web模式；app：App模式(暂不支持)；默认：web")
+	flag.StringVar(&mode, "mode", "app", "运行模式：web：Web模式；app：App模式(试验)；默认：app")
 	flag.Parse()
 
 	if AppConf.IP == "" {
@@ -31,14 +31,14 @@ func init() {
 	switch strings.ToLower(mode) {
 	case "web":
 		AppConf.IsWebMode = true
-	// case "app":
-	// 	AppConf.IsAppMode = true
+	case "app":
+		AppConf.IsAppMode = true
 	default:
 		AppConf.IsWebMode = true
 	}
 
 	AppConf.Name = "goman"
-	AppConf.Version = "0.1.3"
+	AppConf.Version = "0.2.0"
 	AppConf.Started = time.Now().Unix()
 }
 
