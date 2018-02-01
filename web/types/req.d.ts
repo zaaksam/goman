@@ -14,6 +14,9 @@ declare namespace Req {
     }
 
     interface RequestModel {
+        n: number
+        c: number
+        timeout: number
         method: string
         url: string
         headers: ParamModel
@@ -21,14 +24,25 @@ declare namespace Req {
     }
 
     interface ResponseModel {
+        error?: string
         status: string
         statusCode: number
-        duration: string
+        contentLength: number
         proto: string
         headers: ParamModel
         cookies: CookieModel[]
         body: string
         code: string
+        duration: ResponseDuration
+    }
+
+    interface ResponseDuration {
+        dns: string
+        conn: string
+        req: string
+        res: string
+        delay: string
+        finish: string
     }
 
     interface ParamModel {
@@ -57,6 +71,10 @@ declare namespace Req {
         HttpOnly: boolean
         Raw: string
         Unparsed: string[] // Raw text of unparsed attribute-value pairs
+    }
+
+    interface JsonModel {
+        [key: string]: any
     }
 }
 
