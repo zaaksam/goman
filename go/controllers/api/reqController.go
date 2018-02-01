@@ -33,11 +33,19 @@ func (c *ReqController) Post() {
 		return
 	}
 
-	res, err := services.Req.Do(req)
+	if req.N <= 0 {
+		req.N = 1
+	}
+
+	if req.C <= 0 {
+		req.C = 1
+	}
+
+	list, err := services.Req.Do(req)
 	if err != nil {
 		c.SetError(err)
 		return
 	}
 
-	c.SetModel(res)
+	c.SetModel(list)
 }
