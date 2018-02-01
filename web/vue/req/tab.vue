@@ -133,8 +133,8 @@ export default class Tab extends Vue {
   body: string = "";
   bodyMode: "normal" | "raw" = "normal";
 
-  reqN: number = 20;
-  reqC: number = 20;
+  reqN: number = 10;
+  reqC: number = 10;
   reqTimeout: number = 20;
 
   req: Req.RequestModel = {
