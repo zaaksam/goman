@@ -1,4 +1,4 @@
-package main
+package goman
 
 import (
 	"fmt"
@@ -8,14 +8,23 @@ import (
 
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/logs"
-	_ "github.com/mattn/go-sqlite3"
+	// _ "github.com/mattn/go-sqlite3"
 	"github.com/zaaksam/goman/go/config"
 	// _ "github.com/zaaksam/goman/go/db"
 	_ "github.com/zaaksam/goman/go/routers"
 	"github.com/zserge/webview"
 )
 
-func main() {
+// Run 运行goman
+func Run(mode string) {
+	if mode == "web" {
+		config.AppConf.IsAppMode = false
+		config.AppConf.IsWebMode = true
+	} else if mode == "app" {
+		config.AppConf.IsAppMode = true
+		config.AppConf.IsWebMode = false
+	}
+
 	runtime.GOMAXPROCS(-1)
 
 	beego.BConfig.AppName = config.AppConf.Name

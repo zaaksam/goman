@@ -38,7 +38,7 @@ func init() {
 	}
 
 	AppConf.Name = "goman"
-	AppConf.Version = "0.2.0"
+	AppConf.Version = "0.2.1"
 	AppConf.Started = time.Now().Unix()
 }
 
