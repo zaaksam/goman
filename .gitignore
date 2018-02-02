@@ -4,3 +4,4 @@ go/go
 go/debug
 web/static/js/
 /tsconfig.json
+build/dist/
