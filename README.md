@@ -12,6 +12,12 @@ a web app like postman
 
 windows下app版本因兼容问题未发版
 
+# Docker镜像
+
+`docker pull zaaksam/goman`
+
+`docker run -p 8080:8080 zaaksam/goman`
+
 # 界面预览
 
 ![](https://static.oschina.net/uploads/space/2018/0203/091232_EVdr_2686168.jpg)
@@ -25,6 +31,12 @@ Backend Go + beego
 Frontend Typescript + Vue + iView
 
 # 更新日志
+
+2018-02-03 v0.2.2
+
+* 增加docker镜像编译脚本
+* 修改代码支持跨平台条件编译
+* 现在访问首页会默认跳往webui地址
 
 2018-02-02 v0.2.1
 
