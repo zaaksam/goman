@@ -29,6 +29,10 @@ func init() {
 		beego.NSRouter("/*", &controllers.WebController{}),
 	)
 
+	beego.Get("/", func(ctx *context.Context) {
+		ctx.Redirect(302, "/web")
+	})
+
 	var staticHandler http.Handler
 	if config.AppConf.Debug {
 		// dir := path.Dir(os.Args[0])
