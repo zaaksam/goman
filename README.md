@@ -4,18 +4,19 @@ a web app like postman
 
 # 已编译平台(go1.9.2编译)
 
-[goman.v0.2.0.web-win64.zip](https://github.com/zaaksam/goman/files/1685038/goman.v0.2.0.web-win64.zip)
+[goman.v0.2.0.app-darwin64.zip](https://github.com/zaaksam/goman/files/1685050/goman.v0.2.0.app-darwin64.zip)
 
 [goman.v0.2.0.web-darwin64.zip (需要在终端下运行)](https://github.com/zaaksam/goman/files/1685047/goman.v0.2.0.web-darwin64.zip)
 
-[goman.v0.2.0.app-darwin64.zip](https://github.com/zaaksam/goman/files/1685050/goman.v0.2.0.app-darwin64.zip)
+[goman.v0.2.0.web-win64.zip](https://github.com/zaaksam/goman/files/1685038/goman.v0.2.0.web-win64.zip)
 
+windows下app版本因兼容问题未发版
 
 # 界面预览
 
-![](https://static.oschina.net/uploads/img/201802/01180148_cCtc.jpg)
+![](https://static.oschina.net/uploads/space/2018/0203/091232_EVdr_2686168.jpg)
 
-![](https://static.oschina.net/uploads/img/201802/01180212_truj.jpg)
+![](https://static.oschina.net/uploads/space/2018/0203/091306_FECg_2686168.jpg)
 
 # 技术资源
 
