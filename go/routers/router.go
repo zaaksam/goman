@@ -20,12 +20,14 @@ func init() {
 	beego.ErrorController(&controllers.ErrController{})
 
 	api := beego.NewNamespace("/api",
+		beego.NSRouter("/app", &api.AppController{}),
 		beego.NSRouter("/req", &api.ReqController{}),
 		beego.NSRouter("/log", &api.LogController{}),
 	)
 
 	web := beego.NewNamespace("/web",
 		beego.NSRouter("/config.js", &controllers.WebController{}, "get:Config"),
+		beego.NSRouter("/welcome", &controllers.WebController{}, "get:Welcome"),
 		beego.NSRouter("/*", &controllers.WebController{}),
 	)
 
@@ -37,9 +39,9 @@ func init() {
 	if config.AppConf.Debug {
 		// dir := path.Dir(os.Args[0])
 		dir, _ := os.Getwd()
-		dir = filepath.ToSlash(dir) // .../goman/go
+		dir = filepath.ToSlash(dir) // .../goman/go/main/xxx
 		dirs := strings.Split(dir, "/")
-		dir = strings.Join(dirs[0:len(dirs)-1], "/") // .../req
+		dir = strings.Join(dirs[0:len(dirs)-3], "/") // .../goman
 		staticHandler = http.StripPrefix("/static/", http.FileServer(http.Dir(dir+"/web/static")))
 	} else {
 		statikFS, err := fs.New()
