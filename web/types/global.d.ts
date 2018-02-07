@@ -3,8 +3,8 @@ declare var C: CStatic
 interface CStatic {
     appName: string
     appVersion: string
+    runMode: string
     userAgent: string
-
 }
 
 // declare var require: {
