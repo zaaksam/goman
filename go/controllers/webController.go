@@ -81,6 +81,10 @@ func (c *WebController) Config() {
 
 	if config.AppConf.RunMode == config.RUN_MODE_WEB {
 		conf.RunMode = "web"
+	} else if config.AppConf.RunMode == config.RUN_MODE_APP {
+		conf.RunMode = "app"
+	} else if config.AppConf.RunMode == config.RUN_MODE_DOCKER {
+		conf.RunMode = "docker"
 	}
 
 	j, _ := json.Marshal(conf)
