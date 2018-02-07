@@ -7,8 +7,9 @@
             <!-- <Avatar icon="person" size="small" /> -->
             <ButtonGroup>
                 <Button icon="social-github" @click="onGithub"></Button>
+                <Button @click="onGitee">码</Button>
                 <Button @click="onLanguage">{{language}}</Button>
-                <Button icon="refresh" @click="onRefresh"></Button>
+                <Button v-if="isAppMode" icon="refresh" @click="onRefresh"></Button>
             </ButtonGroup>
         </div>
     </div>
@@ -55,18 +56,16 @@ export default class Top extends Vue {
         return this.isCN ? 'EN' : '中文'
     }
 
-    // toggleClick() {
-    //     if (this.app.spanLeft === 4) {
-    //         this.app.spanLeft = 1
-    //         this.app.spanRight = 23
-    //     } else {
-    //         this.app.spanLeft = 4
-    //         this.app.spanRight = 20
-    //     }
-    // }
+    get isAppMode(): boolean {
+        return C.runMode === 'app' ? true : false
+    }
 
     onGithub() {
         window.open('https://github.com/zaaksam/goman')
+    }
+
+    onGitee() {
+        window.open('https://gitee.com/zaaksam/goman')
     }
 
     onLanguage() {
