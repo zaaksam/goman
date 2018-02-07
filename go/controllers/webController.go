@@ -19,23 +19,7 @@ type WebController struct {
 
 // Welcome 浏览器版本欢迎页
 func (c *WebController) Welcome() {
-	windowsDebug := ""
-
-	var unix int64
-	if config.AppConf.Debug {
-		unix = time.Now().Unix()
-
-		if config.AppConf.OS == config.OS_TYPE_WINDOWS {
-			windowsDebug = `<script type="text/javascript" src="https://getfirebug.com/firebug-lite.js"></script>`
-		}
-	} else {
-		unix = config.AppConf.Started
-	}
-	unixStr := "?t=" + strconv.FormatInt(unix, 10)
-
-	body := strings.Replace(views.Welcome, "{{.unix}}", unixStr, -1)
-	body = strings.Replace(body, "{{.appName}}", config.AppConf.Name, -1)
-	body = strings.Replace(body, "{{.windowsDebug}}", windowsDebug, -1)
+	body := c.formatHTML(views.Welcome)
 
 	if c.Ctx.ResponseWriter.Header().Get("Content-Type") == "" {
 		c.Ctx.Output.Header("Content-Type", "text/html; charset=utf-8")
@@ -46,6 +30,16 @@ func (c *WebController) Welcome() {
 
 // Get 主页
 func (c *WebController) Get() {
+	body := c.formatHTML(views.Index)
+
+	if c.Ctx.ResponseWriter.Header().Get("Content-Type") == "" {
+		c.Ctx.Output.Header("Content-Type", "text/html; charset=utf-8")
+	}
+
+	c.Ctx.Output.Body([]byte(body))
+}
+
+func (c *WebController) formatHTML(body string) string {
 	windowsDebug := ""
 
 	var unix int64
@@ -60,15 +54,11 @@ func (c *WebController) Get() {
 	}
 	unixStr := "?t=" + strconv.FormatInt(unix, 10)
 
-	body := strings.Replace(views.Index, "{{.unix}}", unixStr, -1)
+	body = strings.Replace(body, "{{.unix}}", unixStr, -1)
 	body = strings.Replace(body, "{{.appName}}", config.AppConf.Name, -1)
 	body = strings.Replace(body, "{{.windowsDebug}}", windowsDebug, -1)
 
-	if c.Ctx.ResponseWriter.Header().Get("Content-Type") == "" {
-		c.Ctx.Output.Header("Content-Type", "text/html; charset=utf-8")
-	}
-
-	c.Ctx.Output.Body([]byte(body))
+	return body
 }
 
 // Config 配置文件
