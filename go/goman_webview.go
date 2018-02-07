@@ -41,8 +41,8 @@ func run(mode string) {
 	settings := webview.Settings{
 		Title:     config.AppConf.Name,
 		URL:       url,
-		Width:     1280,
-		Height:    900,
+		Width:     800,
+		Height:    600,
 		Resizable: true,
 		Debug:     config.AppConf.Debug,
 		ExternalInvokeCallback: func(w webview.WebView, data string) {
