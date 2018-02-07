@@ -290,6 +290,19 @@ export default class Tab extends Vue {
     }
 
     async onSend() {
+        if (
+            C.runMode === 'docker' &&
+            (this.req.url.indexOf('127.0.0.1') != -1 ||
+                this.req.url.toLowerCase().indexOf('localhost') != -1)
+        ) {
+            this.$Modal.warning({
+                title: '错误请求',
+                content:
+                    'Docker模式下，不支持 127.0.0.1 或 localhost 地址的请求'
+            })
+            return
+        }
+
         this.isSending = true
         this.resList = []
 
