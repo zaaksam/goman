@@ -12,22 +12,24 @@ function BUILD()
     DIR=$(cd $(dirname $0); pwd)
     DISTDIR=$DIR/dist
     DISTNAME=$NAME.$VERSION.$TYPE-win
+
+    DISTSYSO=$GOPATH/src/$SRC/$NAME.syso
     ZIPNAME=$DISTNAME.zip
 
     echo
     echo $ZIPNAME building...
+    echo
 
     cd $DISTDIR
 
+    cp -f $DIR/$NAME.syso $DISTSYSO
+
     # See github.com/karalabe/xgo
-    if [ "$TYPE" == "app" ];then
-        xgo -ldflags="-H windowsgui" -out $DISTNAME --targets=windows-6.1/amd64 $GOPATH/src/$SRC
-    else
-        xgo -out $DISTNAME --targets=windows-6.1/amd64 $GOPATH/src/$SRC
-    fi
+    xgo -ldflags="-H windowsgui" -out $DISTNAME --targets=windows-10.0/amd64 $GOPATH/src/$SRC
+
+    rm $DISTSYSO
     
-    mv $DISTNAME-windows-6.1-amd64.exe $DISTNAME.exe
-    # upx $DISTNAME.exe
+    mv $DISTNAME-windows-10.0-amd64.exe $DISTNAME.exe
     
     zip -m $ZIPNAME $DISTNAME.exe
     
