@@ -17,6 +17,5 @@
 import { Vue, Component } from 'vue-property-decorator'
 
 @Component
-export default class Bottom extends Vue {
-}
+export default class Bottom extends Vue {}
 </script>

@@ -21,9 +21,6 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 
 @Component
 export default class Left extends Vue {
-    @Prop()
-    app: AppModel
-
     get getIconSize() {
         return this.app.spanLeft === 4 ? 14 : 24
     }

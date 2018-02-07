@@ -26,9 +26,10 @@
                 <Card style="width:100%;">
                     <div slot="title">{{$t('goman.req.tab.advanced.title')}}</div>
                     <div>
-                        {{$t('goman.req.tab.advanced.requests')}}：<InputNumber v-model="reqN" :min="1" :step="1" :precision="0" :disabled="isSending"></InputNumber>&nbsp;&nbsp;
-                        {{$t('goman.req.tab.advanced.concurrency')}}：<InputNumber v-model="reqC" :min="1" :step="1" :precision="0" :disabled="isSending"></InputNumber>&nbsp;&nbsp;
-                        {{$t('goman.req.tab.advanced.timeout')}}：<InputNumber v-model="reqTimeout" :min="5" :step="1" :precision="0" :disabled="isSending"></InputNumber>&nbsp;{{$t('goman.req.tab.advanced.timeoutUnit')}}&nbsp;&nbsp;
+                        {{$t('goman.req.tab.advanced.requests')}}：
+                        <InputNumber v-model="reqN" :min="1" :step="1" :precision="0" :disabled="isSending"></InputNumber>&nbsp;&nbsp; {{$t('goman.req.tab.advanced.concurrency')}}：
+                        <InputNumber v-model="reqC" :min="1" :step="1" :precision="0" :disabled="isSending"></InputNumber>&nbsp;&nbsp; {{$t('goman.req.tab.advanced.timeout')}}：
+                        <InputNumber v-model="reqTimeout" :min="5" :step="1" :precision="0" :disabled="isSending"></InputNumber>&nbsp;{{$t('goman.req.tab.advanced.timeoutUnit')}}&nbsp;&nbsp;
                     </div>
                 </Card>
             </Form-item>
@@ -81,347 +82,348 @@
 
 <style>
 .mypre {
-  overflow: auto;
-  overflow-y: hidden;
+    overflow: auto;
+    overflow-y: hidden;
 }
 </style>
 
 <script lang="ts">
-import { Vue, Component, Prop, Watch } from "vue-property-decorator";
-import _ from "lodash";
-import moment from "moment";
-import API from "../../ts/api";
-import ReqList from "./list.vue";
-import ReqPre from "./pre.vue";
-import ReqReport from "./report.vue";
-import { CreateElement } from "vue/types/vue";
+import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
+import _ from 'lodash'
+import moment from 'moment'
+import API from '../../ts/api'
+import ReqList from './list.vue'
+import ReqPre from './pre.vue'
+import ReqReport from './report.vue'
+import { CreateElement } from 'vue/types/vue'
 
 interface IOptions {
-  label: string;
-  value: string;
+    label: string
+    value: string
 }
 
 @Component({
-  components: {
-    ReqList,
-    ReqPre,
-    ReqReport
-  }
+    components: {
+        ReqList,
+        ReqPre,
+        ReqReport
+    }
 })
 export default class Tab extends Vue {
-  @Prop() tab: Req.TabModel;
+    @Prop() tab: Req.TabModel
 
-  advancedIcon = "ios-arrow-down";
-  isAdvanced = false;
-  previewIcon = "ios-arrow-down";
-  previewType = "primary";
-  isPreview = true;
-  isSending = false;
-  reqMode: "Body" | "Headers" | "Code" = "Headers";
-  contentType = "";
-  headers: Req.ListModel[] = [
-    {
-      isDisable: false,
-      id: "ls0",
-      key: "User-Agent",
-      value: C.userAgent,
-      desc: ""
-    }
-  ];
-  params: Req.ListModel[] = [];
-  bodys: Req.ListModel[] = [];
-  body: string = "";
-  bodyMode: "normal" | "raw" = "normal";
-
-  reqN: number = 10;
-  reqC: number = 10;
-  reqTimeout: number = 20;
-
-  req: Req.RequestModel = {
-    n: 0,
-    c: 0,
-    timeout: 0,
-    method: "GET",
-    url: "",
-    headers: {},
-    body: ""
-  };
-
-  start: number = 0;
-  resList: Req.ResponseModel[] = [];
-
-  methodOptions: string[] = ["GET", "POST", "HEAD", "PUT", "DELETE"];
-  rawContentType: string = "text";
-  showParams: boolean = true;
-
-  created() {
-    this.onLocale();
-  }
-
-  @Watch("$i18n.locale")
-  onLocale() {
-    this.onTabLabelChange();
-  }
-
-  mounted() {
-    setTimeout(() => {
-      this.onParamsShow();
-    }, 1);
-  }
-
-  onPreview() {
-    this.isPreview = !this.isPreview;
-
-    if (this.isPreview) {
-      this.previewIcon = "ios-arrow-up";
-      this.previewType = "success";
-    } else {
-      this.previewIcon = "ios-arrow-down";
-      this.previewType = "primary";
-    }
-  }
-
-  onParamsShow() {
-    this.showParams = !this.showParams;
-  }
-
-  /**
-   * 根据params变动，更新url及tab.label
-   */
-  onParamsChange() {
-    let url = this.req.url;
-    let index = url.indexOf("?");
-    if (index != -1) {
-      url = url.substr(0, index);
-    }
-
-    let pmStr = "";
-    _.forEach(this.params, (pm, k) => {
-      if (pm.isDisable) {
-        return;
-      }
-
-      if (pmStr != "") {
-        pmStr += "&";
-      }
-      pmStr += pm.key + "=" + pm.value;
-    });
-
-    this.req.url = pmStr == "" ? url : url + "?" + pmStr;
-    this.onTabLabelChange();
-  }
-
-  /**
-   * 根据url变动，更新params及tab.label
-   */
-  onURLChange(event: any) {
-    this.onTabLabelChange();
-
-    if (this.req.url == "") {
-      return;
-    }
-
-    let url = this.req.url;
-    let index = url.indexOf("?");
-    if (index == -1) {
-      this.params = [];
-      return;
-    }
-
-    let pmStr = url.substr(index + 1);
-    if (pmStr == "") {
-      return;
-    }
-
-    let params: Req.ListModel[] = [];
-    let pms = pmStr.split("&");
-    //遍历参数
-    _.forEach(pms, pm => {
-      if (pm == "") {
-        return;
-      }
-
-      let key = "";
-      let value = "";
-      index = pm.indexOf("=");
-      if (index == -1) {
-        key = pm;
-      } else {
-        key = pm.substr(0, index);
-        value = pm.substr(index + 1);
-      }
-
-      params.push({
-        isDisable: false,
-        id:
-          "ls" +
-          moment()
-            .valueOf()
-            .toString(),
-        key: key,
-        value: value,
-        desc: ""
-      });
-    });
-
-    this.params = params;
-  }
-
-  onTabLabelChange() {
-    let label = this.req.url;
-    if (label.trim() == "") {
-      label = this.$t("goman.req.tab.title").toString();
-    }
-
-    this.tab.label = label.length > 18 ? label.substr(0, 18) : label;
-  }
-
-  onAdvanced() {
-    this.isAdvanced = !this.isAdvanced;
-
-    if (this.isAdvanced) {
-      this.advancedIcon = "ios-arrow-up";
-      this.isPreview = false;
-    } else {
-      this.advancedIcon = "ios-arrow-down";
-      this.isPreview = true;
-    }
-  }
-
-  async onSend() {
-    this.isSending = true;
-    this.resList = [];
-
-    if (this.isAdvanced) {
-      this.req.n = this.reqN;
-      this.req.c = this.reqC;
-      this.req.timeout = this.reqTimeout;
-    } else {
-      this.req.n = 1;
-      this.req.c = 1;
-      this.req.timeout = 0;
-    }
-
-    this.req.headers = {};
-    _.forEach(this.headers, v => {
-      if (!v.isDisable) {
-        if (this.req.headers[v.key]) {
-          this.req.headers[v.key].push(v.value);
-        } else {
-          this.req.headers[v.key] = [v.value];
+    advancedIcon = 'ios-arrow-down'
+    isAdvanced = false
+    previewIcon = 'ios-arrow-down'
+    previewType = 'primary'
+    isPreview = true
+    isSending = false
+    reqMode: 'Body' | 'Headers' | 'Code' = 'Headers'
+    contentType = ''
+    headers: Req.ListModel[] = [
+        {
+            isDisable: false,
+            id: 'ls0',
+            key: 'User-Agent',
+            value: C.userAgent,
+            desc: ''
         }
-      }
-    });
+    ]
+    params: Req.ListModel[] = []
+    bodys: Req.ListModel[] = []
+    body: string = ''
+    bodyMode: 'normal' | 'raw' = 'normal'
 
-    this.req.body = "";
-    if (this.isBody) {
-      if (this.isBodyRaw) {
-        this.req.body = this.body;
-      } else {
-        _.forEach(this.bodys, v => {
-          if (!v.isDisable) {
-            if (this.req.body != "") {
-              this.req.body += "&";
+    reqN: number = 10
+    reqC: number = 10
+    reqTimeout: number = 20
+
+    req: Req.RequestModel = {
+        n: 0,
+        c: 0,
+        timeout: 0,
+        method: 'GET',
+        url: '',
+        headers: {},
+        body: ''
+    }
+
+    start: number = 0
+    resList: Req.ResponseModel[] = []
+
+    methodOptions: string[] = ['GET', 'POST', 'HEAD', 'PUT', 'DELETE']
+    rawContentType: string = 'text'
+    showParams: boolean = true
+
+    created() {
+        this.onLocale()
+    }
+
+    @Watch('$i18n.locale')
+    onLocale() {
+        this.onTabLabelChange()
+    }
+
+    mounted() {
+        setTimeout(() => {
+            this.onParamsShow()
+        }, 1)
+    }
+
+    onPreview() {
+        this.isPreview = !this.isPreview
+
+        if (this.isPreview) {
+            this.previewIcon = 'ios-arrow-up'
+            this.previewType = 'success'
+        } else {
+            this.previewIcon = 'ios-arrow-down'
+            this.previewType = 'primary'
+        }
+    }
+
+    onParamsShow() {
+        this.showParams = !this.showParams
+    }
+
+    /**
+     * 根据params变动，更新url及tab.label
+     */
+    onParamsChange() {
+        let url = this.req.url
+        let index = url.indexOf('?')
+        if (index != -1) {
+            url = url.substr(0, index)
+        }
+
+        let pmStr = ''
+        _.forEach(this.params, (pm, k) => {
+            if (pm.isDisable) {
+                return
             }
 
-            this.req.body += v.key + "=" + encodeURIComponent(v.value);
-          }
-        });
-      }
+            if (pmStr != '') {
+                pmStr += '&'
+            }
+            pmStr += pm.key + '=' + pm.value
+        })
+
+        this.req.url = pmStr == '' ? url : url + '?' + pmStr
+        this.onTabLabelChange()
     }
 
-    let data = new URLSearchParams();
-    data.append("req", JSON.stringify(this.req));
+    /**
+     * 根据url变动，更新params及tab.label
+     */
+    onURLChange(event: any) {
+        this.onTabLabelChange()
 
-    this.start = moment().valueOf();
-    let result = await API.post<Req.ResponseModel[]>("/req", data);
-    if (result.code == 10000) {
-      if (result.data && result.data.length > 0) {
-        this.resList = result.data;
-      }
-    } else {
-      this.$Message.error({
-        duration: 5,
-        content: result.msg + "(" + result.code.toString() + ")"
-      });
+        if (this.req.url == '') {
+            return
+        }
+
+        let url = this.req.url
+        let index = url.indexOf('?')
+        if (index == -1) {
+            this.params = []
+            return
+        }
+
+        let pmStr = url.substr(index + 1)
+        if (pmStr == '') {
+            return
+        }
+
+        let params: Req.ListModel[] = []
+        let pms = pmStr.split('&')
+        //遍历参数
+        _.forEach(pms, pm => {
+            if (pm == '') {
+                return
+            }
+
+            let key = ''
+            let value = ''
+            index = pm.indexOf('=')
+            if (index == -1) {
+                key = pm
+            } else {
+                key = pm.substr(0, index)
+                value = pm.substr(index + 1)
+            }
+
+            params.push({
+                isDisable: false,
+                id:
+                    'ls' +
+                    moment()
+                        .valueOf()
+                        .toString(),
+                key: key,
+                value: value,
+                desc: ''
+            })
+        })
+
+        this.params = params
     }
 
-    this.isSending = false;
-  }
+    onTabLabelChange() {
+        let label = this.req.url
+        if (label.trim() == '') {
+            label = this.$t('goman.req.tab.title').toString()
+        }
 
-  get headersLabel(): string {
-    let label = "Headers";
-
-    if (this.headers.length > 0) {
-      label += "(" + this.headers.length.toString() + ")";
+        this.tab.label = label.length > 18 ? label.substr(0, 18) : label
     }
 
-    return label;
-  }
+    onAdvanced() {
+        this.isAdvanced = !this.isAdvanced
 
-  get isBody(): boolean {
-    let isBody = this.req.method != "GET" && this.req.method != "HEAD";
-    if (!isBody && this.reqMode === "Body") {
-      this.reqMode = "Headers";
+        if (this.isAdvanced) {
+            this.advancedIcon = 'ios-arrow-up'
+            this.isPreview = false
+        } else {
+            this.advancedIcon = 'ios-arrow-down'
+            this.isPreview = true
+        }
     }
 
-    return isBody;
-  }
+    async onSend() {
+        this.isSending = true
+        this.resList = []
 
-  get isBodyRaw(): boolean {
-    let isBodyRaw = this.bodyMode == "raw";
+        if (this.isAdvanced) {
+            this.req.n = this.reqN
+            this.req.c = this.reqC
+            this.req.timeout = this.reqTimeout
+        } else {
+            this.req.n = 1
+            this.req.c = 1
+            this.req.timeout = 0
+        }
 
-    if (this.isBody) {
-      this.contentType = isBodyRaw
-        ? this.rawContentType
-        : "x-www-form-urlencoded";
+        this.req.headers = {}
+        _.forEach(this.headers, v => {
+            if (!v.isDisable) {
+                if (this.req.headers[v.key]) {
+                    this.req.headers[v.key].push(v.value)
+                } else {
+                    this.req.headers[v.key] = [v.value]
+                }
+            }
+        })
+
+        this.req.body = ''
+        if (this.isBody) {
+            if (this.isBodyRaw) {
+                this.req.body = this.body
+            } else {
+                _.forEach(this.bodys, v => {
+                    if (!v.isDisable) {
+                        if (this.req.body != '') {
+                            this.req.body += '&'
+                        }
+
+                        this.req.body +=
+                            v.key + '=' + encodeURIComponent(v.value)
+                    }
+                })
+            }
+        }
+
+        let data = new URLSearchParams()
+        data.append('req', JSON.stringify(this.req))
+
+        this.start = moment().valueOf()
+        let result = await API.post<Req.ResponseModel[]>('/req', data)
+        if (result.code == 10000) {
+            if (result.data && result.data.length > 0) {
+                this.resList = result.data
+            }
+        } else {
+            this.$Message.error({
+                duration: 5,
+                content: result.msg + '(' + result.code.toString() + ')'
+            })
+        }
+
+        this.isSending = false
     }
 
-    return isBodyRaw;
-  }
+    get headersLabel(): string {
+        let label = 'Headers'
 
-  get code(): string {
-    let urls: string[];
-    let path: string;
-    let hosts = this.req.url.split("://");
-    if (hosts.length > 1) {
-      urls = hosts[1].split("/");
-      path = hosts[1];
-    } else {
-      urls = hosts[0].split("/");
-      path = hosts[0];
+        if (this.headers.length > 0) {
+            label += '(' + this.headers.length.toString() + ')'
+        }
+
+        return label
     }
 
-    let host = urls[0];
-    path = urls.length > 1 ? _.replace(path, host, "") : "";
+    get isBody(): boolean {
+        let isBody = this.req.method != 'GET' && this.req.method != 'HEAD'
+        if (!isBody && this.reqMode === 'Body') {
+            this.reqMode = 'Headers'
+        }
 
-    let code = this.req.method + " " + path + " " + "HTTP/1.1";
-    code += "\nHost: " + host;
-
-    _.forEach(this.headers, v => {
-      if (!v.isDisable) {
-        code += "\n" + v.key + ": " + v.value;
-      }
-    });
-
-    code += "\n";
-
-    if (this.isBody) {
-      if (this.isBodyRaw) {
-        code += "\n" + this.body;
-      } else {
-        let i = 0;
-        _.forEach(this.bodys, v => {
-          if (!v.isDisable) {
-            code += i == 0 ? "\n" : "&";
-            code += v.key + "=" + encodeURIComponent(v.value);
-            i++;
-          }
-        });
-      }
+        return isBody
     }
 
-    return code;
-  }
+    get isBodyRaw(): boolean {
+        let isBodyRaw = this.bodyMode == 'raw'
+
+        if (this.isBody) {
+            this.contentType = isBodyRaw
+                ? this.rawContentType
+                : 'x-www-form-urlencoded'
+        }
+
+        return isBodyRaw
+    }
+
+    get code(): string {
+        let urls: string[]
+        let path: string
+        let hosts = this.req.url.split('://')
+        if (hosts.length > 1) {
+            urls = hosts[1].split('/')
+            path = hosts[1]
+        } else {
+            urls = hosts[0].split('/')
+            path = hosts[0]
+        }
+
+        let host = urls[0]
+        path = urls.length > 1 ? _.replace(path, host, '') : ''
+
+        let code = this.req.method + ' ' + path + ' ' + 'HTTP/1.1'
+        code += '\nHost: ' + host
+
+        _.forEach(this.headers, v => {
+            if (!v.isDisable) {
+                code += '\n' + v.key + ': ' + v.value
+            }
+        })
+
+        code += '\n'
+
+        if (this.isBody) {
+            if (this.isBodyRaw) {
+                code += '\n' + this.body
+            } else {
+                let i = 0
+                _.forEach(this.bodys, v => {
+                    if (!v.isDisable) {
+                        code += i == 0 ? '\n' : '&'
+                        code += v.key + '=' + encodeURIComponent(v.value)
+                        i++
+                    }
+                })
+            }
+        }
+
+        return code
+    }
 }
 </script>
