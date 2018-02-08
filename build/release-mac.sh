@@ -17,12 +17,11 @@ function BUILD()
     echo
     echo $TARNAME building...
     
-    if [ "$TYPE" == "app" ];then
-        APPDIR=$DISTDIR/$NAME.app/Contents
+    APPDIR=$DISTDIR/$NAME.app/Contents
 
-        mkdir -p $APPDIR/{MacOS,Resources}
+    mkdir -p $APPDIR/{MacOS,Resources}
 
-        cat > $APPDIR/Info.plist << EOF
+    cat > $APPDIR/Info.plist << EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -42,22 +41,14 @@ function BUILD()
 </dict>
 </plist>
 EOF
-        cp $DIR/$NAME.icns $APPDIR/Resources/$NAME.icns
+    cp $DIR/$NAME.icns $APPDIR/Resources/$NAME.icns
 
-        go build -o $APPDIR/MacOS/$NAME $SRC
-        # upx $APPDIR/MacOS/$NAME
+    go build -o $APPDIR/MacOS/$NAME $SRC
+    upx $APPDIR/MacOS/$NAME
 
-        cd $DISTDIR
-        tar czvf $TARNAME $NAME.app
-        rm -r $NAME.app
-    else
-        go build -o $DISTDIR/$DISTNAME $SRC
-        # upx $DISTDIR/$DISTNAME
-
-        cd $DISTDIR
-        tar czvf $TARNAME $DISTNAME
-        rm $DISTNAME
-    fi
+    cd $DISTDIR
+    tar czvf $TARNAME $NAME.app
+    rm -r $NAME.app
     
     echo
 }

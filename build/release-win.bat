@@ -23,18 +23,14 @@ if not exist %DISTDIR% (
 
 echo.
 echo %DISTNAME% building...
+echo.
 
-windres -i %DIR%\%NAME%.rc -O coff -o %DISTSYSO%
+REM windres -i %DIR%\%NAME%.rc -O coff -o %DISTSYSO%
+echo F | xcopy /Y %DIR%\%NAME%.syso %DISTSYSO%
 
-if "%TYPE%" == "app" (
-	go build -ldflags="-H windowsgui" -o %DISTDIR%\%DISTNAME% %SRC%
-) else (
-	go build -o %DISTDIR%\%DISTNAME% %SRC%
-)
+go build -ldflags="-H windowsgui" -o %DISTDIR%\%DISTNAME% %SRC%
 
 del %DISTSYSO%
-
-:: upx %DISTNAME%
 
 GOTO END
 

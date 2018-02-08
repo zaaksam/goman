@@ -6,11 +6,11 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/zserge/webview)](https://goreportcard.com/report/github.com/zserge/webview)
 
 
-A tiny cross-platform webview library for C/C++/Golang to build modern cross-platform GUI.
+A tiny cross-platform webview library for C/C++/Golang to build modern cross-platform GUI. Also, there are [Rust bindings](https://github.com/Boscop/webview-rs) and [Nim bindings](https://github.com/oskca/webview) available.
 
 It supports two-way JavaScript bindings (to call JavaScript from C/C++/Go and to call C/C++/Go from JavaScript).
 
-It uses Cocoa/WebKit on macOS, gtk-webkit on Linux and MSHTML (IE10/11) on Windows.
+It uses Cocoa/WebKit on macOS, gtk-webkit2 on Linux and MSHTML (IE10/11) on Windows.
 
 <p align="center"><img alt="linux" src="examples/todo-go/screenshots/screenshots.png"></p>
 
@@ -126,7 +126,7 @@ This works fairly well across the platforms, see `counter-go` example for more d
 
 You already have seen how to use `w.Eval()` to run Javascript inside the webview. There is also a way to call Go code from JavaScript.
 
-On the low level there is a special callback, `webview.Settings.ExternalInvokeCallback` that receives a string argument. This string can be passed from JavaScript using `window.external.invoke_(someString)`.
+On the low level there is a special callback, `webview.Settings.ExternalInvokeCallback` that receives a string argument. This string can be passed from JavaScript using `window.external.invoke(someString)`.
 
 This might seem very inconvenient, and that is why there is a dedicated `webview.Bind()` API call. It binds an existing Go object (struct or struct pointer) and creates/injects JS API for it. Now you can call JS methods and they will result in calling native Go methods. Even more, if you modify the Go object - it can be automatically serialized to JSON and passed to the web UI to keep things in sync.
 
@@ -155,7 +155,7 @@ Lite is still available and just works.
 
 ## Distributing webview apps
 
-On Linux you get a standalone executable. It will depend on GTK3 and GtkWebkit, so if you distribute your app in DEB or RPM format include those dependencies. Application icon can be specified by providing a `.desktop` file.
+On Linux you get a standalone executable. It will depend on GTK3 and GtkWebkit2, so if you distribute your app in DEB or RPM format include those dependencies. Application icon can be specified by providing a `.desktop` file.
 
 On MacOS you are likely to ship an app bundle. Make the following directory structure and just zip it:
 
@@ -185,6 +185,7 @@ Download [webview.h](https://raw.githubusercontent.com/zserge/webview/master/web
 
 ```c
 // main.c
+#define WEBVIEW_IMPLEMENTATION
 #include "webview.h"
 
 #ifdef WIN32
@@ -204,7 +205,7 @@ Build it:
 
 ```bash
 # Linux
-$ cc main.c -DWEBVIEW_GTK=1 $(shell pkg-config --cflags --libs gtk+-3.0 webkitgtk-3.0) -o webview-example
+$ cc main.c -DWEBVIEW_GTK=1 $(shell pkg-config --cflags --libs gtk+-3.0 webkit2gtk-4.0) -o webview-example
 # MacOS
 $ cc main.c -DWEBVIEW_COCOA=1 -x objective-c -framework Cocoa -framework WebKit -o webview-example
 # Windows (mingw)
@@ -273,12 +274,12 @@ void my_cb(struct webview *w, const char *arg) {
 	...
 }
 
-// JS (note the trailing underscore)
-window.external.invoke_('some arg');
+// JS
+window.external.invoke('some arg');
 // Exactly one string argument must be provided, to pass more complex objects
 // serialize them to JSON and parse it in C. To pass binary data consider using
 // base64.
-window.external.invoke_(JSON.stringify({fn: 'sum', x: 5, y: 3}));
+window.external.invoke(JSON.stringify({fn: 'sum', x: 5, y: 3}));
 ```
 
 Webview library is meant to be used from a single UI thread only. So if you
@@ -303,6 +304,8 @@ Also, there is a more more advanced complete C++ app, [Slide](https://github.com
 ## Notes
 
 Execution on OpenBSD requires `wxallowed` [mount(8)](https://man.openbsd.org/mount.8) option.
+
+FreeBSD is also supported, to install webkit2 run `pkg install webkit2-gtk3`.
 
 ## License
 

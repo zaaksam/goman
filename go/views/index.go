@@ -10,6 +10,7 @@ const Index = `<!DOCTYPE html>
 <body style="height:100%;width:100%;">
     <div id="app"></div>
 </body>
+{{.windowsDebug}}
 <script src="/web/config.js{{.unix}}"></script>
 <script src="/static/js/vendor.min.js{{.unix}}"></script>
 <script src="/static/js/app.min.js{{.unix}}"></script>

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"math/rand"
 	"net"
+	"runtime"
 	"strings"
 	"time"
 )
@@ -13,6 +14,29 @@ import (
 var AppConf appConf
 
 func init() {
+	AppConf.goos = runtime.GOOS
+	AppConf.goarch = runtime.GOARCH
+
+	if AppConf.goos == "windows" {
+		AppConf.OS = OS_TYPE_WINDOWS
+	} else if AppConf.goos == "darwin" {
+		AppConf.OS = OS_TYPE_DARWIN
+	} else if AppConf.goos == "linux" {
+		AppConf.OS = OS_TYPE_LINUX
+	}
+
+	if AppConf.OS == OS_TYPE_UNSUPPORT {
+		panic("不支持 " + AppConf.goos + " 系统的编译运行")
+	}
+
+	if AppConf.goarch == "amd64" {
+		AppConf.Arch = ARCH_TYPE_AMD64
+	}
+
+	if AppConf.Arch == ARCH_TYPE_UNSUPPORT {
+		panic("不支持 " + AppConf.goarch + " 核心的编译运行")
+	}
+
 	mode := ""
 	flag.BoolVar(&AppConf.Debug, "debug", false, "调试模式，默认：false")
 	flag.StringVar(&AppConf.IP, "ip", "", "监听的IP地址，默认：127.0.0.1")
@@ -28,29 +52,35 @@ func init() {
 		AppConf.Port = newPort(AppConf.IP)
 	}
 
+	AppConf.Host = fmt.Sprintf("http://%s:%d", AppConf.IP, AppConf.Port)
+
 	switch strings.ToLower(mode) {
 	case "web":
-		AppConf.IsWebMode = true
+		AppConf.RunMode = RUN_MODE_WEB
 	case "app":
-		AppConf.IsAppMode = true
+		AppConf.RunMode = RUN_MODE_APP
 	default:
-		AppConf.IsWebMode = true
+		AppConf.RunMode = RUN_MODE_WEB
 	}
 
 	AppConf.Name = "goman"
-	AppConf.Version = "0.2.2"
+	AppConf.Version = "0.3.0"
 	AppConf.Started = time.Now().Unix()
 }
 
 type appConf struct {
-	Name      string
-	Version   string
-	Debug     bool
-	IP        string
-	Port      int
-	Started   int64
-	IsAppMode bool
-	IsWebMode bool
+	goos    string
+	goarch  string
+	OS      OSType
+	Arch    ArchType
+	Name    string
+	Version string
+	Debug   bool
+	Host    string
+	IP      string
+	Port    int
+	Started int64
+	RunMode RunModeType
 }
 
 //newPort 查找可用端口

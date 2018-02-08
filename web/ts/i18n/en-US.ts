@@ -9,6 +9,14 @@ const message: i18nModel = {
             value: 'Value',
             description: 'Description'
         },
+        app: {
+            modal: {
+                title: 'Warning',
+                content: 'Goman has closed! Do you want to leave this page?',
+                okText: 'Yes',
+                cancelText: 'No'
+            }
+        },
         req: {
             tab: {
                 title: 'New Tab',
@@ -26,7 +34,12 @@ const message: i18nModel = {
                     title: 'Request',
                     code: 'Code'
                 },
-                showPreview: 'Show Preview'
+                showPreview: 'Show Preview',
+                modal: {
+                    title: 'Warning',
+                    content: "You can't access localhost(127.0.0.1) network in a docker container",
+                    okText: 'OK'
+                }
             },
             report: {
                 title: 'Response Report',

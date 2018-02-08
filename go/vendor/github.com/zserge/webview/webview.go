@@ -11,8 +11,8 @@
 package webview
 
 /*
-#cgo linux openbsd CFLAGS: -DWEBVIEW_GTK=1
-#cgo linux openbsd pkg-config: gtk+-3.0 webkitgtk-3.0
+#cgo linux openbsd freebsd CFLAGS: -DWEBVIEW_GTK=1
+#cgo linux openbsd freebsd pkg-config: gtk+-3.0 webkit2gtk-4.0
 
 #cgo windows CFLAGS: -DWEBVIEW_WINAPI=1
 #cgo windows LDFLAGS: -lole32 -lcomctl32 -loleaut32 -luuid -mwindows
@@ -33,7 +33,7 @@ static inline void CgoWebViewFree(void *w) {
 }
 
 static inline void *CgoWebViewCreate(int width, int height, char *title, char *url, int resizable, int debug) {
-	struct webview *w = (struct webview *) malloc(sizeof(*w));
+	struct webview *w = (struct webview *) calloc(1, sizeof(*w));
 	w->width = width;
 	w->height = height;
 	w->title = title;
@@ -62,6 +62,14 @@ static inline void CgoWebViewExit(void *w) {
 
 static inline void CgoWebViewSetTitle(void *w, char *title) {
 	webview_set_title((struct webview *)w, title);
+}
+
+static inline void CgoWebViewSetFullscreen(void *w, int fullscreen) {
+	webview_set_fullscreen((struct webview *)w, fullscreen);
+}
+
+static inline void CgoWebViewSetColor(void *w, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
+	webview_set_color((struct webview *)w, r, g, b, a);
 }
 
 static inline void CgoDialog(void *w, int dlgtype, int flags,
@@ -148,8 +156,8 @@ func Debugf(format string, a ...interface{}) {
 }
 
 // ExternalInvokeCallbackFunc is a function type that is called every time
-// "window.external.invoke_()" is called from JavaScript. Data is the only
-// obligatory string parameter passed into the "invoke_(data)" function from
+// "window.external.invoke()" is called from JavaScript. Data is the only
+// obligatory string parameter passed into the "invoke(data)" function from
 // JavaScript. To pass more complex data serialized JSON or base64 encoded
 // string can be used.
 type ExternalInvokeCallbackFunc func(w WebView, data string)
@@ -169,7 +177,7 @@ type Settings struct {
 	Resizable bool
 	// Enable debugging tools (Linux/BSD/MacOS, on Windows use Firebug)
 	Debug bool
-	// A callback that is executed when JavaScript calls "window.external.invoke_()"
+	// A callback that is executed when JavaScript calls "window.external.invoke()"
 	ExternalInvokeCallback ExternalInvokeCallbackFunc
 }
 
@@ -184,9 +192,15 @@ type WebView interface {
 	// SetTitle() changes window title. This method must be called from the main
 	// thread only. See Dispatch() for more details.
 	SetTitle(title string)
+	// SetFullscreen() controls window full-screen mode. This method must be
+	// called from the main thread only. See Dispatch() for more details.
+	SetFullscreen(fullscreen bool)
+	// SetColor() changes window background color. This method must be called from
+	// the main thread only. See Dispatch() for more details.
+	SetColor(r, g, b, a uint8)
 	// Eval() evaluates an arbitrary JS code inside the webview. This method must
 	// be called from the main thread only. See Dispatch() for more details.
-	Eval(js string)
+	Eval(js string) error
 	// InjectJS() injects an arbitrary block of CSS code using the JS API. This
 	// method must be called from the main thread only. See Dispatch() for more
 	// details.
@@ -224,6 +238,19 @@ const (
 	DialogTypeSave
 	// DialogTypeAlert is a system alert dialog (message box)
 	DialogTypeAlert
+)
+
+const (
+	// DialogFlagFile is a normal file picker dialog
+	DialogFlagFile = C.WEBVIEW_DIALOG_FLAG_FILE
+	// DialogFlagDirectory is an open directory dialog
+	DialogFlagDirectory = C.WEBVIEW_DIALOG_FLAG_DIRECTORY
+	// DialogFlagInfo is an info alert dialog
+	DialogFlagInfo = C.WEBVIEW_DIALOG_FLAG_INFO
+	// DialogFlagWarning is a warning alert dialog
+	DialogFlagWarning = C.WEBVIEW_DIALOG_FLAG_WARNING
+	// DialogFlagError is an error dialog
+	DialogFlagError = C.WEBVIEW_DIALOG_FLAG_ERROR
 )
 
 var (
@@ -305,23 +332,35 @@ func (w *webview) SetTitle(title string) {
 	C.CgoWebViewSetTitle(w.w, p)
 }
 
+func (w *webview) SetColor(r, g, b, a uint8) {
+	C.CgoWebViewSetColor(w.w, C.uint8_t(r), C.uint8_t(g), C.uint8_t(b), C.uint8_t(a))
+}
+
+func (w *webview) SetFullscreen(fullscreen bool) {
+	C.CgoWebViewSetFullscreen(w.w, C.int(boolToInt(fullscreen)))
+}
+
 func (w *webview) Dialog(dlgType DialogType, flags int, title string, arg string) string {
 	const maxPath = 4096
 	titlePtr := C.CString(title)
 	defer C.free(unsafe.Pointer(titlePtr))
 	argPtr := C.CString(arg)
 	defer C.free(unsafe.Pointer(argPtr))
-	resultPtr := (*C.char)(C.malloc(maxPath))
+	resultPtr := (*C.char)(C.calloc((C.size_t)(unsafe.Sizeof((*C.char)(nil))), (C.size_t)(maxPath)))
 	defer C.free(unsafe.Pointer(resultPtr))
 	C.CgoDialog(w.w, C.int(dlgType), C.int(flags), titlePtr,
 		argPtr, resultPtr, C.size_t(maxPath))
 	return C.GoString(resultPtr)
 }
 
-func (w *webview) Eval(js string) {
+func (w *webview) Eval(js string) error {
 	p := C.CString(js)
 	defer C.free(unsafe.Pointer(p))
-	C.CgoWebViewEval(w.w, p)
+	switch C.CgoWebViewEval(w.w, p) {
+	case -1:
+		return errors.New("evaluation failed")
+	}
+	return nil
 }
 
 func (w *webview) InjectCSS(css string) {
@@ -366,7 +405,7 @@ if (typeof {{.Name}} === 'undefined') {
 }
 {{ range .Methods }}
 {{$.Name}}.{{.JSName}} = function({{.JSArgs}}) {
-	window.external.invoke_(JSON.stringify({scope: "{{$.Name}}", method: "{{.Name}}", params: [{{.JSArgs}}]}));
+	window.external.invoke(JSON.stringify({scope: "{{$.Name}}", method: "{{.Name}}", params: [{{.JSArgs}}]}));
 };
 {{ end }}
 `))
