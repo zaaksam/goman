@@ -296,9 +296,9 @@ export default class Tab extends Vue {
                 this.req.url.toLowerCase().indexOf('localhost') != -1)
         ) {
             this.$Modal.warning({
-                title: '错误请求',
-                content:
-                    'Docker模式下，不支持 127.0.0.1 或 localhost 地址的请求'
+                title: this.$t('goman.req.tab.modal.title').toString(),
+                content: this.$t('goman.req.tab.modal.content').toString(),
+                okText: this.$t('goman.req.tab.modal.okText').toString()
             })
             return
         }
