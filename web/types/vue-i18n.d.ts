@@ -11,6 +11,14 @@ declare interface i18nModel {
             value: string
             description: string
         }
+        app: {
+            modal: {
+                title: string
+                content: string
+                okText: string
+                cancelText: string
+            }
+        }
         req: {
             tab: {
                 title: string
@@ -29,6 +37,11 @@ declare interface i18nModel {
                     code: string
                 }
                 showPreview: string
+                modal: {
+                    title: string
+                    content: string
+                    okText: string
+                }
             }
             report: {
                 title: string

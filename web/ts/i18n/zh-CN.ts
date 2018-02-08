@@ -9,6 +9,14 @@ const message: i18nModel = {
             value: '值',
             description: '备注'
         },
+        app: {
+            modal: {
+                title: '操作确认',
+                content: 'goman已退出，是否关闭本页面？',
+                okText: '确定',
+                cancelText: '取消'
+            }
+        },
         req: {
             tab: {
                 title: '新标签',
@@ -26,7 +34,12 @@ const message: i18nModel = {
                     title: '请求内容',
                     code: '请求原文'
                 },
-                showPreview: '显示预览'
+                showPreview: '显示预览',
+                modal: {
+                    title: '错误请求',
+                    content: 'Docker模式下，不支持 127.0.0.1 或 localhost 地址的请求',
+                    okText: '确定'
+                }
             },
             report: {
                 title: '响应统计',
