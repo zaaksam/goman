@@ -1,4 +1,4 @@
-FROM golang:1.9.3-alpine3.7 AS build-goman
+FROM golang:1.9.4-alpine3.7 AS build-goman
 WORKDIR /go/src/github.com/zaaksam/goman/go
 COPY go .
 RUN cd main/web && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o goman
