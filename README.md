@@ -2,27 +2,43 @@
 
 a web app like postman
 
-# 已编译平台(go1.9.2编译)
+# 已编译平台(go1.9.x编译)
 
-[goman.v0.2.0.app-darwin64.zip](https://github.com/zaaksam/goman/files/1685050/goman.v0.2.0.app-darwin64.zip)
+web版使用了新的运行形式，使用更便捷，推荐使用web版
 
-[goman.v0.2.0.web-darwin64.zip (需要在终端下运行)](https://github.com/zaaksam/goman/files/1685047/goman.v0.2.0.web-darwin64.zip)
+[goman.v0.3.0.web-win.zip](https://github.com/zaaksam/goman/releases/download/v0.3.0/goman.v0.3.0.web-win.zip)
 
-[goman.v0.2.0.web-win64.zip](https://github.com/zaaksam/goman/files/1685038/goman.v0.2.0.web-win64.zip)
+[goman.v0.3.0.web-mac.tar.gz](https://github.com/zaaksam/goman/releases/download/v0.3.0/goman.v0.3.0.web-mac.tar.gz)
 
-windows下app版本因兼容问题未发版
+[goman.v0.3.0.app-mac.tar.gz](https://github.com/zaaksam/goman/releases/download/v0.3.0/goman.v0.3.0.app-mac.tar.gz)
+
+windows下app版本因IE内核兼容问题未发版
 
 # Docker镜像
 
-`docker pull zaaksam/goman`
+`docker pull zaaksam/goman` 或者指定版本 `docker pull zaaksam/goman:0.3.0`
 
 `docker run -p 8080:8080 zaaksam/goman`
 
+在浏览中打开：`http:127.0.0.1:8080`
+
+注意：docker模式下，goman处在容器内，无法使用 localhost(127.0.0.1) 来请求宿主机的网络资源
+
 # 界面预览
 
-![](https://static.oschina.net/uploads/space/2018/0203/091232_EVdr_2686168.jpg)
+windows web版
 
-![](https://static.oschina.net/uploads/space/2018/0203/091306_FECg_2686168.jpg)
+![](https://static.oschina.net/uploads/img/201802/08120715_zvnn.jpg)
+
+macos web版
+
+![](https://static.oschina.net/uploads/img/201802/08120750_hnI4.jpg)
+
+macos app版（实验）
+
+![](https://static.oschina.net/uploads/img/201802/08120826_tMsb.jpg)
+
+![](https://static.oschina.net/uploads/img/201802/08120851_rVD1.jpg)
 
 # 技术资源
 
@@ -30,7 +46,17 @@ Backend Go + beego
 
 Frontend Typescript + Vue + iView
 
+web版引导界面使用了 knockout + layui样式
+
 # 更新日志
+
+2018-02-08 v0.3.0
+
+* 更便捷的web模式运行方式
+* web模式下增加了浏览器与应用的互相监测
+* docker模式下请求localhost(127.0.01)时会收到警告提示
+* app模式建议为实验性质使用
+* 简化及增强了各个编译脚本内容
 
 2018-02-03 v0.2.2
 
