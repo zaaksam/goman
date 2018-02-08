@@ -12,6 +12,9 @@
                 </div>
             </Content>
         </Layout>
+        <Modal v-model="showClose" :title="$t('goman.app.modal.title')" :ok-text="$t('goman.app.modal.okText')" :cancel-text="$t('goman.app.modal.cancelText')" @on-ok="onClose">
+            <p>{{this.$t('goman.app.modal.content')}}</p>
+        </Modal>
     </div>
 </template>
 
@@ -48,16 +51,29 @@ import API from '../ts/api'
     }
 })
 export default class App extends Vue {
+    showClose = false
+
     mounted() {
         if (C.runMode === 'web') {
             this.heartbeat()
         }
     }
 
+    onClose() {
+        window.opener = null
+        window.open('', '_self')
+        window.close()
+    }
+
     heartbeat() {
         //发送心跳包
         setTimeout(async () => {
-            await API.get<any>('/app')
+            let result = await API.get<any>('/app')
+            if (result.code == -1) {
+                this.showClose = true
+                return
+            }
+
             this.heartbeat()
         }, 1000)
     }
