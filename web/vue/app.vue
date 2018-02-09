@@ -68,7 +68,9 @@ export default class App extends Vue {
     heartbeat() {
         //发送心跳包
         setTimeout(async () => {
-            let result = await API.get<any>('/app')
+            let result = await API.get<any>(
+                '/app?t=' + Math.round(new Date().getTime() / 1000).toString()
+            )
             if (result.code == -1) {
                 this.showClose = true
                 return
