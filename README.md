@@ -1,30 +1,34 @@
 # goman
 
-a web app like postman
+A web app like postman
 
-# 已编译平台(go1.9.x编译)
+# 已发布平台(go1.9.x编译)
 
-web版使用了新的运行形式，使用更便捷，推荐使用web版
+web版，可以使用chrome等浏览器，拥有更好的体验
 
-[goman.v0.3.0.web-win.zip](https://github.com/zaaksam/goman/releases/download/v0.3.0/goman.v0.3.0.web-win.zip)
+ * [goman.v0.3.1.web-win.zip 5.6MB](https://github.com/zaaksam/goman/releases/download/v0.3.1/goman.v0.3.1.web-win.zip)
 
-[goman.v0.3.0.web-mac.tar.gz](https://github.com/zaaksam/goman/releases/download/v0.3.0/goman.v0.3.0.web-mac.tar.gz)
+ * [goman.v0.3.1.web-mac.tar.gz 6.3MB](https://github.com/zaaksam/goman/releases/download/v0.3.1/goman.v0.3.1.web-mac.tar.gz)
 
-[goman.v0.3.0.app-mac.tar.gz](https://github.com/zaaksam/goman/releases/download/v0.3.0/goman.v0.3.0.app-mac.tar.gz)
+app版，独立运行，更简洁，但有些限制
 
-windows下app版本因IE内核兼容问题未发版
+* [goman.v0.3.1.app-win.zip 5.6MB](https://github.com/zaaksam/goman/releases/download/v0.3.1/goman.v0.3.1.app-win.zip) (只兼容IE10/IE11内核，请注意升级系统IE浏览器)
 
-# Docker镜像
+* [goman.v0.3.1.app-mac.tar.gz 6.3MB](https://github.com/zaaksam/goman/releases/download/v0.3.1/goman.v0.3.1.app-mac.tar.gz) (已知问题：无法使用复制/粘贴快捷键，但可使用鼠标右键操作)
 
-`docker pull zaaksam/goman` 或者指定版本 `docker pull zaaksam/goman:0.3.0`
+docker版，更简单的尝鲜使用
 
-`docker run -p 8080:8080 zaaksam/goman`
+* `docker pull zaaksam/goman` 或者指定版本 `docker pull zaaksam/goman:0.3.1`
 
-在浏览中打开：`http:127.0.0.1:8080`
+* `docker run -p 8080:8080 zaaksam/goman`
+
+* 在浏览中打开：`http:127.0.0.1:8080`
 
 注意：docker模式下，goman处在容器内，无法使用 localhost(127.0.0.1) 来请求宿主机的网络资源
 
 # 界面预览
+
+0.3.1版界面相对0.3.0基本没有变化
 
 windows web版
 
@@ -34,7 +38,7 @@ macos web版
 
 ![](https://static.oschina.net/uploads/img/201802/08120750_hnI4.jpg)
 
-macos app版（实验）
+macos app版 (windows版基本雷同)
 
 ![](https://static.oschina.net/uploads/img/201802/08120826_tMsb.jpg)
 
@@ -42,13 +46,25 @@ macos app版（实验）
 
 # 技术资源
 
-Backend Go + beego
+Backend Go + [Beego](https://github.com/astaxie/beego)
 
-Frontend Typescript + Vue + iView
+Frontend Typescript + [Vue](https://cn.vuejs.org) + [iView](https://www.iviewui.com)
 
-web版引导界面使用了 knockout + layui样式
+web版引导界面使用了 [Knockout](http://knockoutjs.com/) + [layui样式](http://www.layui.com)
+
+GUI使用了 https://github.com/zserge/webview
+
+请求耗时统计部份参考了 https://github.com/rakyll/hey 代码
 
 # 更新日志
+
+2018-02-09 v0.3.1
+
+* 解决了IE10/IE11的不兼容问题，win app版来了
+* 临时解决了mac app版滚动时卡顿问题
+* web端心跳包增加了随机数，避免IE缓存
+* web端引导页现在不默认打开浏览器了
+* web端引导页现在会显示运行的URL地址
 
 2018-02-08 v0.3.0
 
