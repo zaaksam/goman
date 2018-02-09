@@ -18,8 +18,14 @@ const Welcome = `<!DOCTYPE html>
                 <li class="layui-nav-item"><a data-bind="click: onClose" href="javascript:;">退出</a></li>
             </ul>
         </div>
-        <div class="layui-body" style="left:145px;top:130px;">
-            <input data-bind="css: { 'layui-btn-disabled': isConnect }, value: btnText, disable: isConnect, click: onOpen" type="button" class="layui-btn layui-btn-lg layui-btn-radius layui-btn-normal" />
+        <div class="layui-body" style="left:145px;top:110px;">
+            <div>
+                <input data-bind="value: url" type="text" class="layui-input" style="width:220px;" readonly="readonly">
+            </div>
+            <div>&nbsp;</div>
+            <div>
+                <input data-bind="css: { 'layui-btn-disabled': isConnect }, value: btnText, disable: isConnect, click: onOpen" type="button" class="layui-btn layui-btn-lg layui-btn-radius layui-btn-normal" />
+            </div>
         </div>
     </div>
 </body>
