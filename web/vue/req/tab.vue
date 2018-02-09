@@ -113,7 +113,7 @@ export default class Tab extends Vue {
     @Prop() tab: Req.TabModel
 
     advancedIcon = 'ios-arrow-down'
-    isAdvanced = false
+    isAdvanced = true
     previewIcon = 'ios-arrow-down'
     previewType = 'primary'
     isPreview = true
@@ -166,6 +166,7 @@ export default class Tab extends Vue {
 
     mounted() {
         setTimeout(() => {
+            this.isAdvanced = false
             this.onParamsShow()
         }, 1)
     }

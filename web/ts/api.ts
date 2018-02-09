@@ -24,19 +24,6 @@ async function request<T>(method: 'get' | 'post', url: string, data?: URLSearchP
     let conf: AxiosRequestConfig = {
         method: method,
         url: '/api' + url
-        // paramsSerializer: (params) => {
-        //     let str = ''
-        //     if (_.size(params) > 0) {
-        //         let i = 0
-        //         _.forEach(params, (v, k) => {
-        //             if (i > 0) {
-        //                 str += '&'
-        //             }
-        //             str += k + '=' + encodeURIComponent(v)
-        //         })
-        //     }
-        //     return str
-        // }
     }
     if (data) {
         conf.data = data
@@ -47,7 +34,6 @@ async function request<T>(method: 'get' | 'post', url: string, data?: URLSearchP
         result.code = res.data.code
         result.msg = res.data.msg
         result.data = res.data.data
-
     } catch (err) {
         result.msg = err.message
     }

@@ -29,7 +29,7 @@ deleteDir(distDir);
 
 var config = {
     entry: {
-        vendor: ['vue', 'vue-router', 'vue-i18n', 'echarts', 'lodash', 'axios', 'moment', 'iview-en', 'iview-zh', 'iview-style', 'iview', 'highlight.js-style', 'highlight.js'],
+        vendor: ['es6-promise', 'vue', 'vue-router', 'vue-i18n', 'echarts', 'lodash', 'axios', 'moment', 'iview-style', 'iview', 'highlight.js-style', 'highlight.js'],
         app: ['./ts/main.ts']
     },
     output: {
@@ -39,8 +39,6 @@ var config = {
     resolve: {
         extensions: ['.ts', '.js', '.vue'],
         alias: {
-            'iview-en': 'iview/dist/locale/en-US',
-            'iview-zh': 'iview/dist/locale/zh-CN',
             'iview-style': 'iview/dist/styles/iview.css',
             'highlight.js-style': 'highlight.js/styles/default.css'
         }
@@ -84,6 +82,7 @@ var config = {
 
 if (isDev) {
     config.watch = true;
+    config.devtool = '#cheap-module-eval-source-map';
     config.plugins.unshift(
         new webpack.DefinePlugin({
             'process.env': {

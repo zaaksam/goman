@@ -72,10 +72,12 @@ func (c *WebController) Config() {
 		Name      string `json:"appName"`
 		Version   string `json:"appVersion"`
 		RunMode   string `json:"runMode"`
+		URL       string `json:"url"`
 		UserAgent string `json:"userAgent"`
 	}{
 		Name:      config.AppConf.Name,
 		Version:   config.AppConf.Version,
+		URL:       fmt.Sprintf("http://%s:%d/web", config.AppConf.IP, config.AppConf.Port),
 		UserAgent: c.Ctx.Input.Header("User-Agent"),
 	}
 
