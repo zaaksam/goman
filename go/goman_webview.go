@@ -9,9 +9,9 @@ import (
 
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/logs"
+	"github.com/webview/webview"
 	"github.com/zaaksam/goman/go/config"
 	"github.com/zaaksam/goman/go/services"
-	"github.com/zserge/webview"
 )
 
 func run(mode string) {
@@ -38,52 +38,51 @@ func run(mode string) {
 
 	go beego.Run()
 
-	settings := webview.Settings{
-		Title:     config.AppConf.Name,
-		URL:       url,
-		Width:     800,
-		Height:    600,
-		Resizable: true,
-		Debug:     config.AppConf.Debug,
-		ExternalInvokeCallback: func(w webview.WebView, data string) {
-			switch data {
-			case "check":
-				isConnect := services.App.IsConnect()
-				if isConnect {
-					callJs(w, "connect")
-				} else {
-					callJs(w, "disconnect")
-				}
-			case "open":
-				openBrowser(url)
-			case "github":
-				openBrowser("https://github.com/zaaksam/goman")
-			case "gitee":
-				openBrowser("https://gitee.com/zaaksam/goman")
-			case "close":
-				w.Terminate()
-				w.Exit()
-			}
-
-		},
-	}
+	// Resizable: true
+	w := webview.New(config.AppConf.Debug)
+	w.SetTitle(config.AppConf.Name)
 
 	if config.AppConf.RunMode == config.RUN_MODE_WEB {
-		settings.URL += "/welcome"
-		settings.Width = 500
-		settings.Height = 300
-		settings.Resizable = false
+		// Resizable: false
+		w.SetSize(500, 300, webview.HintFixed)
+		w.Navigate(url + "/welcome")
+	} else {
+		// Resizable: true
+		w.SetSize(800, 600, webview.HintNone)
+		w.Navigate(url)
 	}
 
-	w := webview.New(settings)
+	w.Bind("check", func() {
+		isConnect := services.App.IsConnect()
+		if isConnect {
+			callJs(w, "connect")
+		} else {
+			callJs(w, "disconnect")
+		}
+	})
+
+	w.Bind("open", func() {
+		openBrowser(url)
+	})
+
+	w.Bind("github", func() {
+		openBrowser("https://github.com/zaaksam/goman")
+	})
+
+	w.Bind("gitee", func() {
+		openBrowser("https://gitee.com/zaaksam/goman")
+	})
+
+	w.Bind("close", func() {
+		w.Terminate()
+		w.Destroy()
+	})
+
 	w.Run()
 }
 
 func callJs(w webview.WebView, data string) {
-	err := w.Eval("vm.callJs('" + data + "');")
-	if err != nil {
-		logs.Error("向js发送消息失败：", err)
-	}
+	w.Eval("vm.callJs('" + data + "');")
 }
 
 func openBrowser(url string) {
