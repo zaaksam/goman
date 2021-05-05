@@ -58,6 +58,11 @@ GUI使用了 https://github.com/zserge/webview
 
 # 更新日志
 
+2021-05-05 v0.4.0
+
+* 使用 go 1.16 及 go mod 管理
+* 调整目录结构
+
 2018-02-09 v0.3.1
 
 * 解决了IE10/IE11的不兼容问题，win app版来了

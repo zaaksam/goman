@@ -21,7 +21,7 @@ function WelcomeViewModel() {
         self.isOpening = true;
         self.isConnect(true);
 
-        window.external.invoke('open');
+        open();
 
         setTimeout(function () {
             self.isOpening = false;
@@ -30,21 +30,21 @@ function WelcomeViewModel() {
 
     self.onCheck = function () {
         setTimeout(function () {
-            window.external.invoke('check');
+            check();
             self.onCheck();
         }, 1500);
     };
 
     self.onGithub = function () {
-        window.external.invoke('github');
+        github();
     };
 
     self.onGitee = function () {
-        window.external.invoke('gitee');
+        gitee();
     };
 
     self.onClose = function () {
-        window.external.invoke('close');
+        close();
     };
 
     self.callJs = function (data) {

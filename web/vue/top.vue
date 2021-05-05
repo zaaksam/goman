@@ -8,8 +8,12 @@
             <ButtonGroup>
                 <Button icon="social-github" @click="onGithub"></Button>
                 <Button @click="onGitee">码</Button>
-                <Button @click="onLanguage">{{language}}</Button>
-                <Button v-if="isAppMode" icon="refresh" @click="onRefresh"></Button>
+                <Button @click="onLanguage">{{ language }}</Button>
+                <Button
+                    v-if="isAppMode"
+                    icon="refresh"
+                    @click="onRefresh"
+                ></Button>
             </ButtonGroup>
         </div>
     </div>
@@ -61,10 +65,20 @@ export default class Top extends Vue {
     }
 
     onGithub() {
+        if (this.isAppMode) {
+            github()
+            return
+        }
+
         window.open('https://github.com/zaaksam/goman')
     }
 
     onGitee() {
+        if (this.isAppMode) {
+            gitee()
+            return
+        }
+
         window.open('https://gitee.com/zaaksam/goman')
     }
 

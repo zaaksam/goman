@@ -1,7 +1,6 @@
 node_modules/
 .vscode/
 go/go
-go/debug
+go/main/*/debug
 web/static/js/
-/tsconfig.json
 build/dist/

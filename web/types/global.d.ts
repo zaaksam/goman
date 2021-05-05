@@ -7,6 +7,9 @@ interface CStatic {
     userAgent: string
 }
 
+declare function github(): void
+declare function gitee(): void
+
 // declare var require: {
 // (path: string): any;
 //     <T>(path: string): T;
