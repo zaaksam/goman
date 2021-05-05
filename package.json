@@ -1,13 +1,13 @@
 {
   "name": "goman",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "description": "",
-  "main": "app.min.js",
+  "main": "web/app.min.js",
   "author": "Zaaksam",
   "license": "MIT",
   "scripts": {
     "build:web": "webpack --config webpack.config.js",
-    "build:go": "statik -src static -dest ../go",
+    "build:go": "statik -src web/static -dest go",
     "build": "run-s build:web build:go",
     "dev": "cross-env NODE_ENV=dev yarn build:web"
   },

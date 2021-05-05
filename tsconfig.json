@@ -16,8 +16,8 @@
         "strict": true
     },
     "include": [
-        "./types/*",
-        "./ts/**/*",
-        "./vue/**/*"
+        "web/types/*",
+        "web/ts/**/*",
+        "web/vue/**/*"
     ]
 }

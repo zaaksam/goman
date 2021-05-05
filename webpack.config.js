@@ -24,13 +24,13 @@ if (process.env && process.env.NODE_ENV === 'dev') {
 }
 
 //总是清除之前生成的文件
-var distDir = path.join(__dirname, 'static', 'js');
+var distDir = path.join(__dirname, 'web', 'static', 'js');
 deleteDir(distDir);
 
 var config = {
     entry: {
         vendor: ['es6-promise', 'vue', 'vue-router', 'vue-i18n', 'echarts', 'lodash', 'axios', 'moment', 'iview-style', 'iview', 'highlight.js-style', 'highlight.js'],
-        app: ['./ts/main.ts']
+        app: ['./web/ts/main.ts']
     },
     output: {
         filename: '[name].min.js',
@@ -105,7 +105,7 @@ if (isDev) {
     );
 
     //生产模式，删除 go/statik 目录重新生成
-    deleteDir(path.join(__dirname, '..', 'go', 'statik'));
+    deleteDir(path.join(__dirname, 'go', 'statik'));
 }
 
 module.exports = config;
